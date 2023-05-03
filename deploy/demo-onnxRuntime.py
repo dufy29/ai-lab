@@ -8,8 +8,10 @@ SRCNN 先把图像上采样到对应分辨率，再用 3 个卷积层处理图�
 并保证每一通道的颜色值都在 0~255 之间。
 如果脚本正常运行的话，一幅超分辨率的人脸照片会保存在“face_torch.png”中。
 
-实践环节：pytorch模型---> onnx  ---> onnxRuntime 加载推理
-参考：https://zhuanlan.zhihu.com/p/477743341
+实践环节：
+    pytorch模型---> onnx  ---> onnxRuntime 加载推理
+参考：
+    模型部署入门教程（一）：模型部署简介, https://zhuanlan.zhihu.com/p/477743341
 
 """
 

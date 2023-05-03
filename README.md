@@ -3,5 +3,5 @@
 
 
 参考：
-- mmdeploy, https://github.com/open-mmlab/mmdeploy/blob/master/docs/zh_cn/tutorial/01_introduction_to_model_deployment.md
+- [mmdeploy模型部署系列](https://github.com/open-mmlab/mmdeploy/tree/master/docs/zh_cn/tutorial)
 - 
