@@ -22,22 +22,21 @@ import torch.onnx
 from torch import nn
 
 class SuperResolutionNet(nn.Module):
-    def __init__(self, upscale_factor):
-        super().__init__()
-        self.upscale_factor = upscale_factor
-        self.img_upsampler = nn.Upsample(
-            scale_factor=self.upscale_factor,
-            mode='bicubic',  # 双三次插值
-            align_corners=False)
 
-        self.conv1 = nn.Conv2d(3,64,kernel_size=9,padding=4)
-        self.conv2 = nn.Conv2d(64,32,kernel_size=1,padding=0)
-        self.conv3 = nn.Conv2d(32,3,kernel_size=5,padding=2)
+    def __init__(self):
+        super().__init__()
+
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=9, padding=4)
+        self.conv2 = nn.Conv2d(64, 32, kernel_size=1, padding=0)
+        self.conv3 = nn.Conv2d(32, 3, kernel_size=5, padding=2)
 
         self.relu = nn.ReLU()
 
-    def forward(self, x):
-        x = self.img_upsampler(x)
+    def forward(self, x, upscale_factor):
+        x = interpolate(x,
+                        scale_factor=upscale_factor,
+                        mode='bicubic',
+                        align_corners=False)
         out = self.relu(self.conv1(x))
         out = self.relu(self.conv2(out))
         out = self.conv3(out)
@@ -53,13 +52,11 @@ for url, name in zip(urls, names):
         open(name, 'wb').write(requests.get(url).content)
 
 def init_torch_model():
-    torch_model = SuperResolutionNet(upscale_factor=3)  # upscale_factor，图片的放大比例是写死在模型里
+    torch_model = SuperResolutionNet()
 
-    model_ = torch.load(names[0])
-    state_dict = model_['state_dict']
-    print(type(model_))
-    for k in model_.keys():
-        print(k)
+    # Please read the code about downloading 'srcnn.pth' and 'face.png' in
+    # https://mmdeploy.readthedocs.io/zh_CN/latest/tutorials/chapter_01_introduction_to_model_deployment.html#pytorch
+    state_dict = torch.load('srcnn.pth')['state_dict']
 
     # Adapt the checkpoint
     for old_key in list(state_dict.keys()):
@@ -71,6 +68,7 @@ def init_torch_model():
     return torch_model
 
 model = init_torch_model()
+
 input_img = cv2.imread(names[1]).astype(np.float32)
 
 # HWC to NCHW
@@ -78,7 +76,7 @@ input_img = np.transpose(input_img, [2, 0, 1])
 input_img = np.expand_dims(input_img, 0)
 
 # Inference
-torch_output = model(torch.from_numpy(input_img)).detach().numpy()
+torch_output = model(torch.from_numpy(input_img), 3).detach().numpy()
 
 # NCHW to HWC
 torch_output = np.squeeze(torch_output, 0)
@@ -86,7 +84,7 @@ torch_output = np.clip(torch_output, 0, 255)
 torch_output = np.transpose(torch_output, [1, 2, 0]).astype(np.uint8)
 
 # Show image
-cv2.imwrite("./deploy/face_torch.png", torch_output)
+cv2.imwrite("./deploy/face_torch_2.png", torch_output)
 
 print(f'='*30)
 """ 记录计算图---> ONNX
