@@ -4,8 +4,12 @@
 而我们交给用户的，只有一个 .onnx 文件和运行超分辨率模型的应用程序。
 我们在不修改 .onnx 文件的前提下改变放大倍数。
 
-实践环节：
-    --->   ---> 
+总结：
+模型部署中常见的几类困难有：模型的动态化；新算子的实现；框架间的兼容。
+PyTorch 转 ONNX，实际上就是把每一个操作转化成 ONNX 定义的某一个算子。比如对于 PyTorch 中的 Upsample 和 interpolate，在转 ONNX 后最终都会成为 ONNX 的 Resize 算子。
+通过修改继承自 torch.autograd.Function 的算子的 symbolic 方法，可以改变该算子映射到 ONNX 算子的行为。
+
+
 参考：
     模型部署入门教程（二）：解决模型部署中的难题, https://zhuanlan.zhihu.com/p/479290520
 
@@ -109,7 +113,7 @@ torch_output = np.clip(torch_output, 0, 255)
 torch_output = np.transpose(torch_output, [1, 2, 0]).astype(np.uint8)
 
 # Show image
-cv2.imwrite("./deploy/face_torch_3.png", torch_output)
+cv2.imwrite("./tmp/face_torch_3.png", torch_output)
 
 print(f'='*30)
 """ 记录计算图---> ONNX
@@ -155,6 +159,6 @@ ort_output = ort_session.run(['output'], ort_inputs)[0]
 ort_output = np.squeeze(ort_output, 0)
 ort_output = np.clip(ort_output, 0, 255)
 ort_output = np.transpose(ort_output, [1, 2, 0]).astype(np.uint8)
-cv2.imwrite("face_ort_3.png", ort_output)
+cv2.imwrite("tmp/face_ort_3.png", ort_output)
 
 print(f'DONE!')
