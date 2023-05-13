@@ -42,7 +42,7 @@ c:/Users/dufei/codes/ai/ai-lab/deploy/onnx/1-srcnn-onnxRuntime copy.py:53: Trace
 ~~~
 查看导出的onnx ，是有问题的：
 
-![](../../pic/a.png)
+![](https://picx.zhimg.com/v2-cfe974e6125a5c507b4530520a22fb91_720w.jpg?source=d16d100b)
 
 解决方法：自定义算子
 
@@ -73,4 +73,4 @@ class NewInterpolate(torch.autograd.Function):
                            align_corners=False)
 ~~~
 
-![](../../pic/b.png)
+![](https://pica.zhimg.com/v2-70b18914d71b8b1d63a3d0d417468cdd_720w.jpg?source=d16d100b)
