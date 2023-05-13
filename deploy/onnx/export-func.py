@@ -2,7 +2,8 @@
 介绍 PyTorch 到 ONNX 的转换函数—— torch.onnx.export。
 
 参考：
-    模型部署入门教程（三）：https://zhuanlan.zhihu.com/p/498425043
+    模型部署入门教程（三）：PyTorch 转 ONNX 详解
+    https://zhuanlan.zhihu.com/p/498425043
 
 """
 

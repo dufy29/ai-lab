@@ -13,6 +13,14 @@ SRCNN 先把图像上采样到对应分辨率，再用 3 个卷积层处理图�
 参考：
     模型部署入门教程（一）：模型部署简介, https://zhuanlan.zhihu.com/p/477743341
 
+模型部署系列教程涉及：
+中间表示 ONNX 的定义标准
+PyTorch 模型转换到 ONNX 模型的方法
+推理引擎 ONNX Runtime、TensorRT 的使用方法
+部署流水线 PyTorch - ONNX - ONNX Runtime/TensorRT 的示例及常见部署问题的解决方法
+MMDeploy C/C++ 推理 SDK
+
+
 """
 
 
@@ -85,6 +93,7 @@ input_img = np.expand_dims(input_img, 0)
 torch_output = model(torch.from_numpy(input_img)).detach().numpy()
 
 # NCHW to HWC
+# 为了让模型输出成正确的图片格式，我们把模型的输出转换成 HWC 格式，
 torch_output = np.squeeze(torch_output, 0)
 torch_output = np.clip(torch_output, 0, 255)
 torch_output = np.transpose(torch_output, [1, 2, 0]).astype(np.uint8)
@@ -92,12 +101,22 @@ torch_output = np.transpose(torch_output, [1, 2, 0]).astype(np.uint8)
 # Show image
 cv2.imwrite("./deploy/face_torch.png", torch_output)
 
+# ---------------------------------------------------------------------------
+
 print(f'='*30)
 """ 记录计算图---> ONNX
-通常只用 ONNX 记录不考虑控制流的静态图。因此，PyTorch 提供了一种叫做追踪（trace）的模型转换方法：
-给定一组输入，再实际执行一遍模型，即把这组输入对应的计算图记录下来，保存为 ONNX 格式。
-export 函数用的就是追踪导出方法，需要给任意一组输入，让模型跑起来。
-我们的测试图片是三通道，256x256大小的，这里也构造一个同样形状的随机张量。
+
+深度学习模型实际上就是一个计算图。
+模型部署时通常把模型转换成静态的计算图，即没有控制流（分支语句、循环语句）的计算图。
+
+ONNX 转换原理：
+    从PyTorch 的模型到 ONNX 的模型，本质上是一种语言上的翻译。
+    直觉上的想法是像编译器一样彻底解析原模型的代码，记录所有控制流。
+    但前面也讲到，【我们通常只用 ONNX 记录不考虑控制流的静态图。】
+    因此，PyTorch 提供了一种叫做追踪（trace）的模型转换方法：
+    给定一组输入，再实际执行一遍模型，即把这组输入对应的计算图记录下来，保存为 ONNX 格式。
+    【export 函数用的就是追踪导出方法】，需要给任意一组输入，让模型跑起来。
+    我们的测试图片是三通道，256x256大小的，这里也构造一个同样形状的随机张量。
 """
 print(f'开始生成中间表示——ONNX....')
 x = torch.randn(1, 3, 256, 256)
@@ -123,14 +142,19 @@ else:
     print("Model correct")
     print(f"通过拖入网站{'https://netron.app'} 查看可视化结果")
 
+# ---------------------------------------------------------------------------
 print(f'='*30)
 print(f'开始推理引擎——ONNX Runtime....')
+print(f'ONNX模型加载路径：{onnx_path}')
 import onnxruntime
 
 ort_session = onnxruntime.InferenceSession(onnx_path)
+print(f'{type(input_img)}')
 ort_inputs = {'input': input_img}  # 注意输入输出张量的名称需要和torch.onnx.export 中设置的输入输出名对应。
-ort_output = ort_session.run(['output'], ort_inputs)[0]
+ort_output = ort_session.run(['output'], 
+                             ort_inputs)[0]
 
+# 后处理部分
 ort_output = np.squeeze(ort_output, 0)
 ort_output = np.clip(ort_output, 0, 255)
 ort_output = np.transpose(ort_output, [1, 2, 0]).astype(np.uint8)
