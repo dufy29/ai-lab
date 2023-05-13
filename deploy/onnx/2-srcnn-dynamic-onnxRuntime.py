@@ -19,8 +19,6 @@
 
 
 """
-
-
 import os
 
 import cv2
@@ -30,9 +28,6 @@ import torch
 import torch.onnx
 from torch import nn
 from torch.nn.functional import interpolate 
-
-
-
 
 class NewInterpolate(torch.autograd.Function): 
     """
