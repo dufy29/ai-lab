@@ -40,9 +40,9 @@ Traceback (most recent call last):
 c:/Users/dufei/codes/ai/ai-lab/deploy/onnx/1-srcnn-onnxRuntime copy.py:53: TracerWarning: Converting a tensor to a Python number might cause the trace to be incorrect. We can't record the data flow of Python values, so this value will be treated as a constant in the future. This means that the trace might not generalize to other inputs!
   scale_factor=upscale_factor.item(),
 ~~~
-查看导出的onnx ，是有问题的：
+查看导出的onnx ，是有问题的(没有缩放因子输入)：
 
-![](https://github.com/dufy29/ai-lab/blob/97ba75daffc5e8896b079174551e94a76c95f07f/pic/a.png)
+![](https://raw.githubusercontent.com/dufy29/ai-lab/main/pic/a.png)
 
 
 解决方法：自定义算子
@@ -74,5 +74,5 @@ class NewInterpolate(torch.autograd.Function):
                            align_corners=False)
 ~~~
 
-![](https://pica.zhimg.com/v2-70b18914d71b8b1d63a3d0d417468cdd_720w.jpg?source=d16d100b)
+![](https://raw.githubusercontent.com/dufy29/ai-lab/main/pic/b.png)
 
