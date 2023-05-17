@@ -42,7 +42,7 @@ c:/Users/dufei/codes/ai/ai-lab/deploy/onnx/1-srcnn-onnxRuntime copy.py:53: Trace
 ~~~
 查看导出的onnx ，是有问题的：
 
-![](https://picx.zhimg.com/v2-cfe974e6125a5c507b4530520a22fb91_720w.jpg?source=d16d100b)
+![](https://github.com/dufy29/ai-lab/blob/97ba75daffc5e8896b079174551e94a76c95f07f/pic/a.png)
 
 
 解决方法：自定义算子
