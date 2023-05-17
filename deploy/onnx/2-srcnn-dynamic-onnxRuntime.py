@@ -3,8 +3,14 @@
 现在，假设我们要做一个超分辨率的应用。我们的用户希望图片的放大倍数能够自由设置。
 而我们交给用户的，只有一个 .onnx 文件和运行超分辨率模型的应用程序。我们在不修改 .onnx 文件的前提下改变放大倍数。
 
-实践环节：
-    pytorch模型---> onnx  ---> onnxRuntime 加载推理
+总结：
+    模型部署中常见的几类困难有：模型的动态化；
+    新算子的实现；
+    框架间的兼容。
+    PyTorch 转 ONNX，实际上就是把每一个操作转化成 ONNX 定义的某一个算子。
+    比如对于 PyTorch 中的 Upsample 和 interpolate，在转 ONNX 后最终都会成为 ONNX 的 Resize 算子。
+    通过修改继承自 torch.autograd.Function 的算子的 symbolic 方法，可以改变该算子映射到 ONNX 算子的行为。
+
 
 参考：
     模型部署入门教程（二）：解决模型部署中的难题
