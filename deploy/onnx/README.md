@@ -44,6 +44,7 @@ c:/Users/dufei/codes/ai/ai-lab/deploy/onnx/1-srcnn-onnxRuntime copy.py:53: Trace
 
 ![](https://picx.zhimg.com/v2-cfe974e6125a5c507b4530520a22fb91_720w.jpg?source=d16d100b)
 
+
 解决方法：自定义算子
 
 我们得自己定义一个实现插值的 PyTorch 算子，然后让它映射到一个我们期望的 ONNX Resize 算子上。
