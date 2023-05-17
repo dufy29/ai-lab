@@ -76,3 +76,9 @@ class NewInterpolate(torch.autograd.Function):
 
 ![](https://raw.githubusercontent.com/dufy29/ai-lab/main/pic/b.png)
 
+经过自定义算子，导出的onnx 模型效果如下：
+![](https://raw.githubusercontent.com/dufy29/ai-lab/main/pic/c.png)
+
+参考：
+- [第二章：解决模型部署中的难题](https://github.com/open-mmlab/mmdeploy/blob/master/docs/zh_cn/tutorial/02_challenges.md)
+- 
