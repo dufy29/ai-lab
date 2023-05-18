@@ -1,5 +1,10 @@
 
+**模型部署系列**
+
 # 支持动态输入的超分辨率模型
+onnx/2-srcnn-dynamic-onnxRuntime.py
+
+https://github.com/open-mmlab/mmdeploy/blob/master/docs/zh_cn/tutorial/02_challenges.md
 ## 1, onnx 导出时报错
 
 ~~~python
