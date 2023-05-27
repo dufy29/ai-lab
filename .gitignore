@@ -132,3 +132,4 @@ model
 .vscode
 tmp/*
 *.onnx
+train/llm/*
