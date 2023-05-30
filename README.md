@@ -12,3 +12,13 @@
 
 - [Understanding Parameter-Efficient Finetuning of Large Language Models: From Prefix Tuning to LLaMA-Adapters](https://lightning.ai/pages/community/article/understanding-llama-adapters/)
 - 论文《 LoRA: Low-Rank Adaptation of Large Language Models》
+- huggingface/peft, https://github.com/huggingface/peft
+
+    Parameter-Efficient Fine-Tuning (PEFT) methods enable efficient adaptation of pre-trained language models (PLMs) to various downstream applications without fine-tuning all the model's parameters. 
+    
+    Supported methods:
+    - LoRA
+    - Prefix Tuning
+    - P-Tuning
+    - Prompt Tuning
+    - AdaLoRA
