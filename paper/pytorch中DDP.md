@@ -1,3 +1,6 @@
+《PyTorch Distributed: Experiences on Accelerating
+Data Parallel Training》
+
 
 DDP 设计模块：
 ![](https://raw.githubusercontent.com/dufy29/ai-lab/main/pic/a11.png)  
@@ -31,6 +34,5 @@ DDP采用`AllReduce` 通信原语计算梯度和，NCCL/Gloo/MPI等通信库均�
 `AllReduce` 属于同步通信，参数服务中的 P2P（点对点通信）属于异步通信
 ~~~
 
-~~~
-sd
-~~~
+
+
