@@ -2,7 +2,9 @@
 """
 关于transformer 中句子位置向量的编码
 直接硬编码，无学习参数
-参考：https://www.cnblogs.com/xiximayou/p/13343665.html
+参考：
+https://www.cnblogs.com/xiximayou/p/13343665.html
+Transformer中的Position Embedding, https://zhuanlan.zhihu.com/p/360539748
 
 """
 
@@ -66,7 +68,49 @@ class PositionalEncoding(nn.Module):
           [list(range(1, len + 1)) + [0] * (max_len - len) for len in input_len])
         return self.position_encoding(input_pos)
 
-pe = PositionalEncoding(3, 5)  #  d_model, max_seq_len
-input_lens = torch.tensor([[4],[2]], dtype=torch.long)  # 这里的4,2 代表输入句子长度
+d_model, max_seq_len = 3,5
+pe = PositionalEncoding(d_model, max_seq_len)  #  d_model, max_seq_len
+input_lens = torch.tensor([[5],[2]], dtype=torch.long)  # 这里的4,2 代表输入句子长度
 print(f'{input_lens.shape}')
 print(pe(input_lens))
+
+
+print(f'===='*20)
+print(f'可视化..')
+
+import numpy as np
+import matplotlib.pyplot as plt
+# Code from https://www.tensorflow.org/tutorials/text/transformer
+def get_angles(pos, i, d_model):
+    angle_rates = 1 / np.power(10000, (2 * (i//2)) / np.float32(d_model))
+    return pos * angle_rates
+
+def positional_encoding(position, d_model):
+    angle_rads = get_angles(np.arange(position)[:, np.newaxis],
+                        np.arange(d_model)[np.newaxis, :],
+                        d_model)
+
+    # apply sin to even indices in the array; 2i
+    angle_rads[:, 0::2] = np.sin(angle_rads[:, 0::2])
+
+    # apply cos to odd indices in the array; 2i+1
+    angle_rads[:, 1::2] = np.cos(angle_rads[:, 1::2])
+
+    pos_encoding = angle_rads[np.newaxis, ...]
+    print(pos_encoding)
+    return pos_encoding
+ 
+
+dimensions, tokens = d_model, max_seq_len
+
+pos_encoding = positional_encoding(tokens, dimensions)
+print(pos_encoding.shape)
+
+plt.figure(figsize=(12,8))
+plt.pcolormesh(pos_encoding[0], cmap='viridis')
+plt.xlabel('Embedding Dimensions')
+plt.xlim((0, dimensions))
+plt.ylim((tokens,0))
+plt.ylabel('Token Position')
+plt.colorbar()
+plt.show()
