@@ -13,6 +13,12 @@
 - [知乎提问：对大规模 model training 感兴趣，请问有相关推荐的文章吗？](https://www.zhihu.com/question/508671222/answer/2290801813)
 - 
 
+### ZeRO 优化技术
+- [DeepSpeed之ZeRO系列：将显存优化进行到底](https://basicv8vc.github.io/posts/zero/)
+- [【大规模训练】ZeRO 的思路与实现](https://my.oschina.net/u/5682856/blog/5539626)
+
+
+
 
 ## 部署
 
