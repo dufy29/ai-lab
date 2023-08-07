@@ -132,5 +132,7 @@ model
 .vscode
 tmp/*
 *.onnx
-train/llm/*
+train/llm/ChatGLM-6B/*
+train/llm/deepSpeedExamples/*
 Untitled.ipynb
+llama_twosum
