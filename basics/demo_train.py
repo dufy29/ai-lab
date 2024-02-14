@@ -48,7 +48,7 @@ model = LinearRegressionModel(input_dim, output_dim)
 model.apply(init_weights1)
 print(model.state_dict()['linear1.weight'])
 
-epochs = 5800 # 训练次数
+epochs = 3500 # 训练次数
 learning_rate = 0.00001 # 学习率
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)# 优化器
 criterion = nn.MSELoss() # 回归任务可选用MSE等
@@ -57,12 +57,19 @@ criterion = nn.MSELoss() # 回归任务可选用MSE等
 inputs = torch.from_numpy(x_train)
 labels = torch.from_numpy(y_train)
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+inputs = inputs.to(device)
+labels = labels.to(device)
+# x_train = x_train.to(device)
+# y_train = y_train.to(device)
+model.to(device) # 移动模型到cuda
+
 forward_time=0
 backward_time=0
 loss_time=0
 for epoch in range(epochs):
     epoch += 1
-    print(f'{epoch}/{epochs} =====================')
+    # print(f'{epoch}/{epochs} =====================')
     # for name in model.state_dict():  # 打印参数权重
     #     print(name, model.state_dict()[name])
 
@@ -77,15 +84,15 @@ for epoch in range(epochs):
 
     # 前向传播
     time0=time.time()
-    outputs = model.forward(inputs)
+    outputs = model(inputs)
     forward_time += time.time()-time0
     
     # 计算损失
     time0=time.time()
     loss = criterion(outputs, labels)
     loss_time += time.time()-time0
-    # # 每50个epoch输出一次，以显示训练进度
-    # if epoch % 1 == 0:
+    # 每50个epoch输出一次，以显示训练进度
+    # if epoch % 100 == 0:
     #     print('epoch {}, loss {}'.format(epoch, loss.item()))
     
     # 反向传播
@@ -101,10 +108,9 @@ for epoch in range(epochs):
     #     print(name, model.state_dict()[name])
 
 
+print(f'前向耗时： {forward_time} \n loss 耗时： {loss_time} \n后向耗时： {backward_time} \n 后向/前向：{backward_time/forward_time}')
 
-y_predicted = model.forward(torch.from_numpy(x_train)).data.numpy()
+y_predicted = model(inputs)
 print(f'y_predicted: {y_predicted.shape}')
 print(y_predicted.T)
 print(f'real: {y_values}')
-
-print(f'前向耗时： {forward_time} \n loss 耗时： {loss_time} \n后向耗时： {backward_time} \n 后向/前向：{backward_time/forward_time}')
